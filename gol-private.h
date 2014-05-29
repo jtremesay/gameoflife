@@ -1,3 +1,8 @@
+//
+// Attention !
+// Ce fichier fait partie de l'API privée. Son utilisation est déconseillée.
+//
+
 #ifndef GOLPRIVATE_H
 #define GOLPRIVATE_H
 
@@ -39,13 +44,39 @@
     } while (false)
 #endif
 
+/**
+ * Une structure représentant le monde
+ *
+ * @brief The world struct
+ */
 struct world
 {
+    /**
+     * La largeur du monde
+     * @brief width
+     */
     unsigned int width;
+
+    /**
+     * La hauteur du monde
+     * @brief height
+     */
     unsigned int height;
+
+    /**
+     * Les données du monde
+     * @brief map
+     */
     bool ** map;
 };
 
+/**
+ * Copie les données d'un monde dans un autre monde
+ *
+ * @brief world_copy_data
+ * @param world_in Monde source
+ * @param world_out Monde de destination
+ */
 void world_copy_data(const struct world * world_in, struct world * world_out);
 
 #endif // GOLPRIVATE_H
