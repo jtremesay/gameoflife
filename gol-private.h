@@ -46,4 +46,6 @@ struct world
     bool ** map;
 };
 
+void world_copy_data(const struct world * world_in, struct world * world_out);
+
 #endif // GOLPRIVATE_H
