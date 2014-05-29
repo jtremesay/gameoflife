@@ -43,7 +43,7 @@ void world_free(struct world * world)
         if (world->map) {
             const unsigned int height = world_get_height(world);
             for (unsigned int y = 0; y < height; ++y) {
-                    free(world->map[y]);
+                free(world->map[y]);
             }
 
             free(world->map);
@@ -67,13 +67,43 @@ unsigned int world_get_height(const struct world * world)
     return world->height;
 }
 
-bool world_cell_is_alive(const struct world * world, unsigned int x, unsigned int y)
+bool world_cell_get_is_alive(const struct world * world, unsigned int x, unsigned int y)
 {
     ASSERT_VALID_WORLD(world);
     ASSERT_VALID_X(world, x);
     ASSERT_VALID_Y(world, y);
 
     return world->map[y][x];
+}
+
+void world_cell_set_is_alive(struct world * world, unsigned int x, unsigned int y, bool is_alive)
+{
+    ASSERT_VALID_WORLD(world);
+    ASSERT_VALID_X(world, x);
+    ASSERT_VALID_Y(world, y);
+
+    world->map[y][x] = is_alive;
+}
+
+bool world_cell_is_alive(unsigned int neighbors_count, bool is_alive)
+{
+    if (is_alive) {
+        if (neighbors_count < 2) { // Pas assez de voisins
+            return false;
+        }
+
+        if (neighbors_count > 3) { // Trop de voisins
+            return false;
+        }
+
+        return true;
+    } else {
+        if (neighbors_count == 3) { // Copulation
+            return true;
+        }
+
+        return false;
+    }
 }
 
 void world_populate(struct world * world, float probability)
@@ -99,11 +129,14 @@ void world_update(struct world * world)
     const unsigned int height = world_get_height(world);
     for (unsigned int y = 0; y < height; ++y) {
         for (unsigned int x = 0; x < width; ++x) {
-           const unsigned int number_of_neighboors = world_number_of_neighboors(world, x, y);
+            const unsigned int neighbors_count = world_neighbors_count(world, x, y);
+            const bool is_alive = world_cell_get_is_alive(world, x, y);
+            const bool new_is_alive = world_cell_is_alive(neighbors_count, is_alive);
 
+            world_cell_set_is_alive(world_tmp, x, y, new_is_alive);
         }
     }
-
+    world_copy_data(world_tmp, world);
     world_free(world_tmp);
 }
 
@@ -115,7 +148,7 @@ void world_print(const struct world * world)
     const unsigned int height = world_get_height(world);
     for (unsigned int y = 0; y < height; ++y) {
         for (unsigned int x = 0; x < width; ++x) {
-            const bool cell_is_alive = world_cell_is_alive(world, x, y);
+            const bool cell_is_alive = world_cell_get_is_alive(world, x, y);
             printf("%c", (cell_is_alive ? 'X' : '.'));
         }
         printf("\n");
@@ -123,7 +156,49 @@ void world_print(const struct world * world)
     printf("\n");
 }
 
-unsigned int world_number_of_neighboors(struct world * world, unsigned int x, unsigned int y)
+unsigned int world_neighbors_count(struct world * world, unsigned int x, unsigned int y)
 {
-    return 0;
+    unsigned int neighbors_count = 0;
+
+    const unsigned int width = world_get_width(world);
+    const unsigned int height = world_get_height(world);
+
+    const unsigned left = (x == 0) ? (width - 1) : (x - 1);
+    const unsigned right = (x == width - 1) ? 0 : x + 1;
+    const unsigned bottom = (y == 0) ? (height - 1) : (y - 1);
+    const unsigned top = (y == height - 1) ? 0 : y + 1;
+
+    if (world_cell_get_is_alive(world, x, top)) { // Haut
+        ++neighbors_count;
+    }
+
+    if (world_cell_get_is_alive(world, x, bottom)) { // Bas
+        ++neighbors_count;
+    }
+
+    if (world_cell_get_is_alive(world, left, y)) { // Gauche
+        ++neighbors_count;
+    }
+
+    if (world_cell_get_is_alive(world, right, y)) { // Droite
+        ++neighbors_count;
+    }
+
+    if (world_cell_get_is_alive(world, left, top)) { // Haut gauche
+        ++neighbors_count;
+    }
+
+    if (world_cell_get_is_alive(world, right, top)) { // Haut droit
+        ++neighbors_count;
+    }
+
+    if (world_cell_get_is_alive(world, left, bottom)) { // Bas gauche
+        ++neighbors_count;
+    }
+
+    if (world_cell_get_is_alive(world, right, bottom)) { // Bas droit
+        ++neighbors_count;
+    }
+
+    return neighbors_count;
 }
