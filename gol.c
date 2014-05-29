@@ -9,7 +9,7 @@
 #else
 #define ASSERT_VALID_WORLD(__WORLD__) \
 do { \
-    struct world * __world__ = (__WORLD__); \
+    const struct world * __world__ = (__WORLD__); \
     assert(__world__ != NULL); \
     assert(__world__->width > 0); \
     assert(__world__->height > 0); \
@@ -112,7 +112,7 @@ void world_update(struct world * world)
     world_free(world_tmp);
 }
 
-void world_print(struct world * world)
+void world_print(const struct world * world)
 {
     ASSERT_VALID_WORLD(world);
 
