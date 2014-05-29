@@ -1,6 +1,5 @@
 #include "gol.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include "gol-private.h"
 
 struct world * world_create(unsigned int width, unsigned int height)

@@ -1,5 +1,4 @@
 #include "gol-private.h"
-#include <math.h>
 #include "gol.h"
 
 void world_copy_data(const struct world * world_in, struct world * world_out)
