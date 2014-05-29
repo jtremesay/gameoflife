@@ -92,18 +92,15 @@ bool world_cell_is_alive(unsigned int neighbors_count, bool is_alive)
     // - une cellule morte nait si elle a trois voisins
     // - une cellule ne change pas d'état dans les autres cas
 
-        if (neighbors_count > 3) { // Trop de voisins
-            return false;
-        }
-
-        return true;
-    } else {
-        if (neighbors_count == 3) { // Copulation
-            return true;
-        }
-
+    if (is_alive && (neighbors_count < 2 || neighbors_count > 3)) {
         return false;
     }
+
+    if (!is_alive && neighbors_count == 3) {
+        return true;
+    }
+
+    return is_alive;
 }
 
 void world_populate(struct world * world, float probability)
