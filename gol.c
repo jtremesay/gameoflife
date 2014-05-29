@@ -26,7 +26,6 @@
         const struct world * __world__ = (__WORLD__); \
         const unsigned int __x__ = (__X__); \
         const unsigned int __world_width__ = world_get_width(__world__); \
-        assert(__x__ >= 0); \
         assert(__x__ < __world_width__); \
     } while (false)
 
@@ -35,7 +34,6 @@
         const struct world * __world__ = (__WORLD__); \
         const unsigned int __y__ = (__Y__); \
         const unsigned int __world_height__ = world_get_height(__world__); \
-        assert(__y__ >= 0); \
         assert(__y__ < __world_height__); \
     } while (false)
 #endif
