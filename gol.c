@@ -106,6 +106,15 @@ unsigned int world_get_height(const struct world * world)
     return world->height;
 }
 
+bool world_cell_is_alive(const struct world * world, unsigned int x, unsigned int y)
+{
+    ASSERT_VALID_WORLD(world);
+    ASSERT_VALID_X(world, x);
+    ASSERT_VALID_Y(world, y);
+
+    return world->map[y][x];
+}
+
 void world_populate(struct world * world, float probability)
 {
     ASSERT_VALID_WORLD(world);
@@ -145,7 +154,8 @@ void world_print(const struct world * world)
     const unsigned int height = world_get_height(world);
     for (unsigned int y = 0; y < height; ++y) {
         for (unsigned int x = 0; x < width; ++x) {
-            printf("%c", (world->map[y][x] ? 'X' : '.'));
+            const bool cell_is_alive = world_cell_is_alive(world, x, y);
+            printf("%c", (cell_is_alive ? 'X' : '.'));
         }
         printf("\n");
     }
