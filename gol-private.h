@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #ifdef NDEBUG
 #define ASSERT_VALID_WORLD(__WORLD__)
