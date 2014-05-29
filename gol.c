@@ -58,7 +58,8 @@ void world_free(struct world * world)
 {
     if (world) {
         if (world->map) {
-            for (unsigned int y = 0; y < world->height; ++y) {
+            const unsigned int height = world_get_height(world);
+            for (unsigned int y = 0; y < height; ++y) {
                 if (world->map[y]) {
                     free(world->map[y]);
                 }
@@ -89,8 +90,10 @@ void world_populate(struct world * world, float probability)
 {
     ASSERT_VALID_WORLD(world);
 
-    for (unsigned int y = 0; y < world->height; ++y) {
-        for (unsigned int x = 0; x < world->width; ++x) {
+    const unsigned int width = world_get_width(world);
+    const unsigned int height = world_get_height(world);
+    for (unsigned int y = 0; y < height; ++y) {
+        for (unsigned int x = 0; x < width; ++x) {
             world->map[y][x] = (((float) rand()) / ((float) RAND_MAX)) <= probability;
         }
     }
@@ -102,8 +105,10 @@ void world_update(struct world * world)
 
     struct world * world_tmp = world_create(world->width, world->height);
 
-    for (unsigned int y = 0; y < world->height; ++y) {
-        for (unsigned int x = 0; x < world->width; ++x) {
+    const unsigned int width = world_get_width(world);
+    const unsigned int height = world_get_height(world);
+    for (unsigned int y = 0; y < height; ++y) {
+        for (unsigned int x = 0; x < width; ++x) {
            const unsigned int number_of_neighboors = world_number_of_neighboors(world, x, y);
 
         }
@@ -116,8 +121,10 @@ void world_print(const struct world * world)
 {
     ASSERT_VALID_WORLD(world);
 
-    for (unsigned int y = 0; y < world->height; ++y) {
-        for (unsigned int x = 0; x < world->width; ++x) {
+    const unsigned int width = world_get_width(world);
+    const unsigned int height = world_get_height(world);
+    for (unsigned int y = 0; y < height; ++y) {
+        for (unsigned int x = 0; x < width; ++x) {
             printf("%c", (world->map[y][x] ? 'X' : '.'));
         }
         printf("\n");
