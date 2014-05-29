@@ -114,7 +114,8 @@ void world_populate(struct world * world, float probability)
     const unsigned int height = world_get_height(world);
     for (unsigned int y = 0; y < height; ++y) {
         for (unsigned int x = 0; x < width; ++x) {
-            world->map[y][x] = (((float) rand()) / ((float) RAND_MAX)) <= probability;
+            const bool is_alive = (((float) rand()) / ((float) RAND_MAX)) <= probability;
+            world_cell_set_is_alive(world, x, y, is_alive);
         }
     }
 }
