@@ -86,10 +86,11 @@ void world_cell_set_is_alive(struct world * world, unsigned int x, unsigned int 
 
 bool world_cell_is_alive(unsigned int neighbors_count, bool is_alive)
 {
-    if (is_alive) {
-        if (neighbors_count < 2) { // Pas assez de voisins
-            return false;
-        }
+    // Rappel des règles :
+    // - une cellule vivante meurt si elle a moins de deux ou plus de trois
+    //   voisins
+    // - une cellule morte nait si elle a trois voisins
+    // - une cellule ne change pas d'état dans les autres cas
 
         if (neighbors_count > 3) { // Trop de voisins
             return false;
@@ -122,8 +123,10 @@ void world_update(struct world * world)
 {
     ASSERT_VALID_WORLD(world);
 
+    // Création d'un monde temporaire qui stockera la nouvelle génération
     struct world * world_tmp = world_create(world->width, world->height);
 
+    // Calcul de la génération suivante
     const unsigned int width = world_get_width(world);
     const unsigned int height = world_get_height(world);
     for (unsigned int y = 0; y < height; ++y) {
@@ -131,11 +134,14 @@ void world_update(struct world * world)
             const unsigned int neighbors_count = world_neighbors_count(world, x, y);
             const bool is_alive = world_cell_get_is_alive(world, x, y);
             const bool new_is_alive = world_cell_is_alive(neighbors_count, is_alive);
-
             world_cell_set_is_alive(world_tmp, x, y, new_is_alive);
         }
     }
+
+    // Copie des données
     world_copy_data(world_tmp, world);
+
+    // Ménage
     world_free(world_tmp);
 }
 
