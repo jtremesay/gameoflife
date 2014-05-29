@@ -80,9 +80,7 @@ void world_free(struct world * world)
         if (world->map) {
             const unsigned int height = world_get_height(world);
             for (unsigned int y = 0; y < height; ++y) {
-                if (world->map[y]) {
                     free(world->map[y]);
-                }
             }
 
             free(world->map);
