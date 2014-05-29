@@ -71,6 +71,20 @@ void world_free(struct world * world)
     }
 }
 
+unsigned int world_get_width(const struct world * world)
+{
+    ASSERT_VALID_WORLD(world);
+
+    return world->width;
+}
+
+unsigned int world_get_height(const struct world * world)
+{
+    ASSERT_VALID_WORLD(world);
+
+    return world->height;
+}
+
 void world_populate(struct world * world, float probability)
 {
     ASSERT_VALID_WORLD(world);
